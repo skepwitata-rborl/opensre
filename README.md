@@ -8,6 +8,10 @@
 </p>
 
 <p align="center">
+  Open-source SRE agent for automated incident investigation and root cause analysis. Automatically analyzes alerts from Slack, Grafana, Datadog, and other tooling.
+</p>
+
+<p align="center">
   <strong>
     <a href="https://tracer-cloud.slack.com/archives/C0AL8S64936">Slack</a> ·
     <a href="https://app.tracer.cloud/">Getting Started</a> ·
