@@ -2,10 +2,6 @@
   <img src="https://raw.githubusercontent.com/Tracer-Cloud/open-sre-agent/main/app/icons/BannerGithub.png" alt="Tracer Banner" width="100%">
 </p>
 <meta name="google-site-verification" content="05niXvrQUSPCpucsCP7t1loNt_Kke3N9i6QIJ_0Gcg8" />
-<p align="center">
-  <strong>The open-source SRE agent that automatically investigates incidents and finds the root cause, before your team gets paged.
-</strong>
-</p>
 <meta name="google-site-verification" content="I3aNPV9RpFv0aanmy5B22oKjsZ9PCamozvrggjFQJq8" />
 <p align="center">
   Open-source SRE agent for automated incident investigation and root cause analysis. Automatically analyzes alerts from Slack, Grafana, Datadog, and other tooling.
