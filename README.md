@@ -136,7 +136,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
 Thanks goes to these amazing people:
 
-<!-- readme: collaborators,contributors -start -->
+<!-- readme: contributors -start -->
 <table>
 	<tbody>
 		<tr>
@@ -245,7 +245,7 @@ Thanks goes to these amazing people:
 		</tr>
 	<tbody>
 </table>
-<!-- readme: collaborators,contributors -end -->
+<!-- readme: contributors -end -->
 
 ---
 
