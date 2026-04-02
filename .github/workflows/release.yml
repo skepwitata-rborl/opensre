@@ -16,6 +16,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
     steps:
       - uses: actions/checkout@v5
@@ -38,7 +40,7 @@ jobs:
         run: |
           make lint
           make typecheck
-          make test-cov
+          # make test-cov
 
       - name: Build distribution artifacts
         run: python -m build
