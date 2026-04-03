@@ -1,5 +1,5 @@
 {
-  "$schema": "https://opensre.com/docs.json",
+  "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
   "name": "Tracer Documentation",
   "modeToggle": {
