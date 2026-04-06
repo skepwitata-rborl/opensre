@@ -153,8 +153,6 @@ def list_investigations() -> list[InvestigationMeta]:
 @app.get("/investigations/{inv_id}")
 def get_investigation(inv_id: str) -> Response:
     """Return the raw ``.md`` content of a single investigation."""
-    if not re.fullmatch(r"[\w\-]+", inv_id):
-        raise HTTPException(status_code=400, detail="Invalid investigation ID")
     path = _safe_investigation_path(inv_id)
     if not path.exists():
         raise HTTPException(status_code=404, detail=f"Investigation {inv_id} not found")
@@ -166,13 +164,19 @@ def get_investigation(inv_id: str) -> Response:
 # ---------------------------------------------------------------------------
 
 
+_SAFE_INV_ID = re.compile(r"[\w\-]+")
+
+
 def _safe_investigation_path(inv_id: str) -> Path:
-    """Resolve an investigation file path with path-traversal protection."""
-    safe_base = str(INVESTIGATIONS_DIR.resolve()) + os.sep
-    candidate = str((INVESTIGATIONS_DIR / f"{inv_id}.md").resolve())
-    if not candidate.startswith(safe_base):
-        raise ValueError(f"Invalid investigation ID: {inv_id}")
-    return Path(candidate)
+    """Resolve an investigation file path with path-traversal protection.
+
+    Rejects any ID that contains characters outside ``[\\w-]`` so the
+    constructed filename is guaranteed to stay inside INVESTIGATIONS_DIR.
+    """
+    if not _SAFE_INV_ID.fullmatch(inv_id):
+        raise HTTPException(status_code=400, detail="Invalid investigation ID")
+    filename = f"{inv_id}.md"
+    return INVESTIGATIONS_DIR / filename
 
 
 def _slugify(text: str) -> str:
