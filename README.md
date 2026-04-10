@@ -18,8 +18,8 @@
 
 <p align="center">
   <strong>
-    <a href="https://app.tracer.cloud/">Getting Started</a> ·
-    <a href="https://tracer.mintlify.app/">Docs</a> ·
+    <a href="https://www.opensre.com/docs/quickstart">Quickstart</a> ·
+    <a href="https://www.opensre.com/docs">Docs</a> ·
     <a href="https://tracer.mintlify.app/faq">FAQ</a> ·
     <a href="https://trust.tracer.cloud/">Security</a>
   </strong>
