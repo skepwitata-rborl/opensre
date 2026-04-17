@@ -6,10 +6,10 @@
 
 <h1>OpenSRE: Build Your Own AI SRE Agents</h1>
 
-**🚧 Public Beta** Core workflows are stable for early use, while APIs and integrations may evolve over time.
 
 <p>The open-source framework for AI SRE agents, and the training and evaluation environment they need to improve. Connect the 40+ tools you already run, define your own workflows, and investigate incidents on your own infrastructure.</p>
 
+🚧 Public Beta: Core workflows are stable for early use, while APIs and integrations may evolve over time.
 
 <p>
   <a href="https://github.com/Tracer-Cloud/opensre/stargazers"><img src="https://img.shields.io/github/stars/Tracer-Cloud/opensre?style=flat-square&color=FF6B00" alt="Stars"></a>
