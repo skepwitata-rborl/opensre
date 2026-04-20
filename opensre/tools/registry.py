@@ -94,34 +94,14 @@ class ToolRegistry:
     # Introspection
     # ------------------------------------------------------------------
 
-    def list_names(self) -> List[str]:
+    def list_tools(self) -> List[str]:
         """Return a sorted list of all registered tool names."""
         return sorted(self._tools)
 
-    def list_available(self) -> List[str]:
-        """Return tool names whose ``is_available()`` check passes."""
-        available = []
-        for name, cls in self._tools.items():
-            try:
-                if cls.is_available():
-                    available.append(name)
-            except Exception:  # noqa: BLE001
-                logger.warning("is_available() raised for tool '%s'", name, exc_info=True)
-        return sorted(available)
-
-    def __len__(self) -> int:  # pragma: no cover
+    def __len__(self) -> int:
+        """Return the number of registered tools."""
         return len(self._tools)
 
-    def __repr__(self) -> str:  # pragma: no cover
-        return f"ToolRegistry(tools={self.list_names()})"
-
-
-# Module-level convenience helpers
-
-#: Global registry instance.
-registry: ToolRegistry = ToolRegistry.get_instance()
-
-
-def register_tool(tool_cls: Type[BaseTool]) -> Type[BaseTool]:
-    """Decorator that registers *tool_cls* in the global registry."""
-    return registry.register(tool_cls)
+    def __contains__(self, name: str) -> bool:
+        """Support ``'tool_name' in registry`` checks."""
+        return name in self._tools
