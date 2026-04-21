@@ -102,6 +102,5 @@ class ToolRegistry:
         """Return the number of registered tools."""
         return len(self._tools)
 
-    def __contains__(self, name: str) -> bool:
-        """Support ``'tool_name' in registry`` checks."""
-        return name in self._tools
+    def __repr__(self) -> str:  # handy when debugging in a REPL
+        return f"ToolRegistry(tools={self.list_tools()})"
