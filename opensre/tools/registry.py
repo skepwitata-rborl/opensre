@@ -102,5 +102,5 @@ class ToolRegistry:
         """Return the number of registered tools."""
         return len(self._tools)
 
-    def __repr__(self) -> str:  # handy when debugging in a REPL
+    def __repr__(self) -> str:  # handy for debugging in a REPL
         return f"ToolRegistry(tools={self.list_tools()})"
