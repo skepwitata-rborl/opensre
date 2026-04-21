@@ -89,14 +89,15 @@ class BaseTool(abc.ABC):
         """Validate params then run the tool, catching unexpected exceptions."""
         if not self.is_available():
             return ToolResult.fail(
-                f"{self.display_name or self.name} is not available in this environment"
+                f"Tool '{self.name}' is not available in this environment."
             )
         try:
             params = self.extract_params(raw)
         except ValueError as exc:
+            logger.warning("[%s] invalid params: %s", self.name, exc)
             return ToolResult.fail(f"Invalid parameters: {exc}")
         try:
             return self.run(params)
         except Exception as exc:  # noqa: BLE001
-            logger.exception("Unexpected error in %s.run", self.__class__.__name__)
+            logger.exception("[%s] unexpected error during run", self.name)
             return ToolResult.fail(f"Unexpected error: {exc}")
