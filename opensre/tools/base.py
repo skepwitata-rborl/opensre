@@ -58,7 +58,8 @@ class BaseTool(abc.ABC):
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
-        if not abc.ABC in cls.__bases__:  # only validate concrete classes
+        # Use abc.ABC in cls.__mro__ to correctly detect abstract intermediates
+        if abc.ABC not in cls.__bases__:  # only validate concrete classes
             if not cls.name:
                 raise TypeError(f"{cls.__name__} must define a non-empty `name`")
             if not cls.display_name:
@@ -88,17 +89,16 @@ class BaseTool(abc.ABC):
     def safe_run(self, raw: dict[str, Any]) -> ToolResult:
         """Validate params then run the tool, catching unexpected exceptions."""
         if not self.is_available():
-            logger.warning("Tool '%s' is not available in this environment.", self.name)
             return ToolResult.fail(
-                f"Tool '{self.name}' is not available in this environment."
+                f"{self.display_name or self.name} is not available in this environment"
             )
         try:
             params = self.extract_params(raw)
         except ValueError as exc:
-            logger.debug("Parameter validation failed for '%s': %s", self.name, exc)
-            return ToolResult.fail(f"Invalid parameters: {exc}")
+            logger.warning("[%s] invalid params: %s", self.name, exc)
+            return ToolResult.fail(str(exc))
         try:
             return self.run(params)
         except Exception as exc:  # noqa: BLE001
-            logger.exception("Unexpected error in tool '%s'", self.name)
+            logger.exception("[%s] unexpected error during run", self.name)
             return ToolResult.fail(f"Unexpected error: {exc}")
