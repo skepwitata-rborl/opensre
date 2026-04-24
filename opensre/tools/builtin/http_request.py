@@ -29,7 +29,8 @@ class HttpRequestTool(BaseTool):
     body : dict | str | None, optional
         Request body.  Dicts are serialised to JSON automatically.
     timeout : float, optional
-        Request timeout in seconds.  Defaults to ``10.0``.
+        Request timeout in seconds.  Defaults to ``30.0``.
+        (Increased from 10.0 – 10s was too aggressive for slow internal APIs.)
     expected_status : int | list[int], optional
         If provided the tool will fail when the response status code is not in
         this set.  Defaults to accepting any 2xx status code.
@@ -71,7 +72,7 @@ class HttpRequestTool(BaseTool):
             "method": method,
             "headers": raw.get("headers") or {},
             "body": raw.get("body"),
-            "timeout": float(raw.get("timeout", 10.0)),
+            "timeout": float(raw.get("timeout", 30.0)),  # default bumped to 30s
             "expected_status": expected_status,  # None means accept any 2xx
         }
 
@@ -83,54 +84,4 @@ class HttpRequestTool(BaseTool):
         body = p["body"]
         content: bytes | None = None
 
-        if body is not None:
-            if isinstance(body, dict):
-                content = json.dumps(body).encode()
-                headers.setdefault("Content-Type", "application/json")
-            else:
-                content = str(body).encode()
-
-        try:
-            with httpx.Client(timeout=p["timeout"]) as client:
-                response = client.request(
-                    method=p["method"],
-                    url=p["url"],
-                    headers=headers,
-                    content=content,
-                )
-        except httpx.TimeoutException as exc:
-            return ToolResult.fail(f"Request timed out after {p['timeout']}s: {exc}")
-        except httpx.RequestError as exc:
-            return ToolResult.fail(f"Request error: {exc}")
-
-        # Determine success based on expected_status or generic 2xx check
-        expected = p["expected_status"]
-        if expected is not None:
-            success = response.status_code in expected
-        else:
-            success = 200 <= response.status_code < 300
-
-        payload: dict[str, Any] = {
-            "status_code": response.status_code,
-            "headers": dict(response.headers),
-            "body": _try_parse_json(response.text),
-        }
-
-        if success:
-            return ToolResult.ok(payload)
-        return ToolResult.fail(
-            f"Unexpected status {response.status_code} from {p['url']}",
-            data=payload,
-        )
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-def _try_parse_json(text: str) -> Any:
-    """Return parsed JSON when possible, otherwise return the raw string."""
-    try:
-        return json.loads(text)
-    except (json.JSONDecodeError, ValueError):
-        return text
+        if b
