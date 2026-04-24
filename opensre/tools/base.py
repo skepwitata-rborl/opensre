@@ -88,16 +88,17 @@ class BaseTool(abc.ABC):
     def safe_run(self, raw: dict[str, Any]) -> ToolResult:
         """Validate params then run the tool, catching unexpected exceptions."""
         if not self.is_available():
+            logger.warning("Tool '%s' is not available in this environment.", self.name)
             return ToolResult.fail(
                 f"Tool '{self.name}' is not available in this environment."
             )
         try:
             params = self.extract_params(raw)
         except ValueError as exc:
-            logger.warning("[%s] invalid params: %s", self.name, exc)
+            logger.debug("Parameter validation failed for '%s': %s", self.name, exc)
             return ToolResult.fail(f"Invalid parameters: {exc}")
         try:
             return self.run(params)
         except Exception as exc:  # noqa: BLE001
-            logger.exception("[%s] unexpected error during run", self.name)
+            logger.exception("Unexpected error in tool '%s'", self.name)
             return ToolResult.fail(f"Unexpected error: {exc}")
