@@ -34,6 +34,9 @@ class HttpRequestTool(BaseTool):
     expected_status : int | list[int], optional
         If provided the tool will fail when the response status code is not in
         this set.  Defaults to accepting any 2xx status code.
+    follow_redirects : bool, optional
+        Whether to automatically follow HTTP redirects. Defaults to ``True``.
+        Set to ``False`` if you need to inspect redirect responses directly.
     """
 
     my_tool_name = "http_request"
@@ -74,14 +77,13 @@ class HttpRequestTool(BaseTool):
             "body": raw.get("body"),
             "timeout": float(raw.get("timeout", 30.0)),  # default bumped to 30s
             "expected_status": expected_status,  # None means accept any 2xx
+            # I often deal with APIs behind redirecting load balancers, so
+            # defaulting follow_redirects to True saves a lot of manual config.
+            "follow_redirects": bool(raw.get("follow_redirects", True)),
         }
 
     def run(self, params: dict[str, Any]) -> ToolResult:
         """Execute the HTTP request and return a :class:`ToolResult`."""
         p = self.extract_params(params)
 
-        headers: dict[str, str] = dict(p["headers"])
-        body = p["body"]
-        content: bytes | None = None
-
-        if b
+        headers: dict[str, str] = p["headers"]
